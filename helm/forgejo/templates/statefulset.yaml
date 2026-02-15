@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "forgejo.fullname" . }}
+spec:
+  serviceName: {{ include "forgejo.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "forgejo.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "forgejo.name" . }}
+    spec:
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      containers:
+        - name: forgejo
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.httpPort }}
+              name: http
+            - containerPort: {{ .Values.service.sshPort }}
+              name: ssh
+          env:
+            - name: USER_UID
+              value: "{{ .Values.securityContext.runAsUser }}"
+            - name: USER_GID
+              value: "{{ .Values.securityContext.runAsGroup }}"
+          envFrom:
+            - configMapRef:
+                name: {{ include "forgejo.fullname" . }}-env-vars
+            # Override sensitive values from ConfigMap with Secret content
+            - secretRef:
+                name: {{ include "forgejo.fullname" . }}-env-vars
+          volumeMounts:
+            - name: forgejo-storage
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: forgejo-storage
+      spec:
+        accessModes: {{ toYaml .Values.persistence.accessModes | nindent 10 }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}

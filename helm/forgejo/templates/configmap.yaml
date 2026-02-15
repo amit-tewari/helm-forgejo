@@ -1,0 +1,104 @@
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "forgejo.fullname" . }}-env-vars
+data:
+  # https://codeberg.org/forgejo/forgejo/src/branch/forgejo/contrib/environment-to-ini
+  USER_UID: "{{ .Values.securityContext.runAsUser }}"
+  USER_GID: "{{ .Values.securityContext.runAsGroup }}"
+  FORGEJO__APP_NAME: "{{ .Values.forgejo.appName }}"
+  FORGEJO__APP_SLOGAN: "{{ .Values.forgejo.appSlogan }}"
+  FORGEJO__RUN_MODE: "{{ .Values.forgejo.runMode }}"
+  FORGEJO__WORK_PATH: "{{ .Values.forgejo.workPath }}"
+  FORGEJO__RUN_USER: "{{ .Values.forgejo.runUser }}"
+  # Attachment configuration
+  FORGEJO__ATTACHMENT__PATH: "{{ .Values.forgejo.attachment.path }}"
+  # Cron configuration
+  FORGEJO__CRON_0x2E_UPDATE_CHECKER__ENABLED: "{{ .Values.forgejo.cron.UpdateChecker }}"
+   # Database configuration
+  FORGEJO__database__DB_TYPE: "{{ .Values.forgejo.database.type }}"
+  FORGEJO__database__HOST: "{{ .Values.forgejo.database.host }}"
+  FORGEJO__database__LOG_SQL: {{ .Values.forgejo.database.logSql }}
+  FORGEJO__database__NAME: "{{ .Values.forgejo.database.name }}"
+  FORGEJO__database__PASSWD: "{{ .Values.forgejo.database.passwd }}"
+  FORGEJO__database__PATH: "{{ .Values.forgejo.database.path }}"
+  FORGEJO__database__SCHEMA: "{{ .Values.forgejo.database.schema }}"
+  FORGEJO__database__SSL_MODE: "{{ .Values.forgejo.database.sslMode }}"
+  FORGEJO__database__USER: "{{ .Values.forgejo.database.user }}"
+  # LFS configuration
+  FORGEJO__LFS__PATH: "{{ .Values.forgejo.lfs.path }}"
+  # Log configuration
+  FORGEJO__LOG__MODE: "{{ .Values.forgejo.log.mode }}"
+  FORGEJO__LOG__LEVEL: "{{ .Values.forgejo.log.level }}"
+  FORGEJO__LOG__ROOT_PATH: "{{ .Values.forgejo.log.rootPath }}"
+  # Mailer configuration
+  FORGEJO__MAILER__ENABLED: "{{ .Values.forgejo.mailer.enabled }}"
+  FORGEJO__MAILER__HOST: "{{ .Values.forgejo.mailer.host }}"
+  FORGEJO__MAILER__USER: "{{ .Values.forgejo.mailer.user }}"
+  FORGEJO__MAILER__PASSWORD: "{{ .Values.forgejo.mailer.password }}"
+  # OAuth configuration
+  FORGEJO__OAUTH__JWT_SECRET: "{{ .Values.forgejo.oauth.jwtSecret }}"
+  # OpenID configuration
+  FORGEJO__OPENID__ENABLLE_OPENID_SIGN_IN: "{{ .Values.forgejo.openid.enablleOpenIDSignIn }}"
+  FORGEJO__OPENID__ENABLE_OPENID_SIGN_UP: "{{ .Values.forgejo.openid.enableOpenIDSignUp }}"
+  # Picture configuration
+  FORGEJO__PICTURE__AVATAR_UPLOAD_PATH: "{{ .Values.forgejo.picture.avatarUploadPath }}"
+  FORGEJO__PICTURE__REPOSITORY_AVATAR_UPLOAD_PATH: "{{ .Values.forgejo.picture.repositoryAvatarUploadPath }}"
+  # Repository configuration
+  FORGEJO__REPOSITORY__ROOT: "{{ .Values.forgejo.repository.root }}"
+  FORGEJO__REPOSITORY_0x2E_LOCAL__LOCAL_COPY_PATH: "{{ .Values.forgejo.repository.local.localCopyPath }}"
+  FORGEJO__REPOSITORY_0x2E_PULL_REQUEST__DEFAULT_MERGE_STYLE: "{{ .Values.forgejo.repository.pullRequest.defaultMergeStyle }}"
+  FORGEJO__REPOSITORY_0x2E_SIGNING__DEFAULT_TRUST_MODEL: "{{ .Values.forgejo.repository.signing.defaultTrustModel }}"
+  FORGEJO__REPOSITORY_0x2E_UPLOAD__TEMP_PATH: "{{ .Values.forgejo.repository.upload.tempPath }}"
+  # security configuration
+  FORGEJO__SECURITY__INSTALL_LOCK: "{{ .Values.securityContext.installLock }}"
+  FORGEJO__SECURITY__SECRET_KEY: "{{ .Values.securityContext.secretKey }}"
+  FORGEJO__SECURITY__REVERSE_PROXY_LIMIT: "{{ .Values.securityContext.reverseProxyLimit }}"
+  FORGEJO__SECURITY__REVERSE_PROXY_TRUSTED_PROXIES: '{{ .Values.securityContext.reverseProxyTrustedProxies }}'
+  FORGEJO__SECURITY__INTERNAL_TOKEN: "{{ .Values.securityContext.internalToken }}"
+  FORGEJO__SECURITY__PASSWORD_HASH_ALGO: "{{ .Values.securityContext.passwordHashAlgorithm }}"
+  FORGEJO__SECURITY__DISABLE_GIT_HOOKS: "{{ .Values.securityContext.disableGitHooks }}"
+  # Server configuration
+  FORGEJO__server__APP_DATA_PATH: "{{ .Values.forgejo.server.APP_DATA_PATH }}"
+  FORGEJO__server__BUILTIN_SSH_SERVER_USER: "{{ .Values.forgejo.server.BUILTIN_SSH_SERVER_USER | default "git" }}"
+  FORGEJO__server__DISABLE_SSH: "{{ .Values.forgejo.server.DISABLE_SSH | default "false" }}"
+  FORGEJO__server__DOMAIN: "{{ .Values.forgejo.server.DOMAIN | default .Values.forgejo.server.SSH_DOMAIN }}"
+  FORGEJO__server__HTTP_PORT: {{ .Values.forgejo.server.HTTP_PORT }}
+  FORGEJO__server__LFS_JWT_SECRET: "{{ .Values.forgejo.server.LFS_JWT_SECRET | default "VaqCP1lo-Fg2nO4bz4jWgN0B-YHYnmVp7CzvO5sAWfI" }}"
+  FORGEJO__server__LFS_START_SERVER: "{{ .Values.forgejo.server.LFS_START_SERVER | default "true" }}"
+  FORGEJO__server__OFFLINE_MODE: "{{ .Values.forgejo.server.OFFLINE_MODE | default "true" }}"
+  FORGEJO__server__ROOT_URL: "{{ .Values.forgejo.server.ROOT_URL }}"
+  FORGEJO__server__SSH_DOMAIN: "{{ .Values.forgejo.server.SSH_DOMAIN }}"
+  FORGEJO__server__SSH_LISTEN_PORT: "{{ .Values.forgejo.server.SSH_LISTEN_PORT | default .Values.service.sshPort }}"
+  FORGEJO__server__SSH_PORT: "{{ .Values.forgejo.server.SSH_PORT | default .Values.service.sshPort }}"
+  FORGEJO__server__START_SSH_SERVER: "{{ .Values.forgejo.server.START_SSH_SERVER | default "true" }}"
+  # service configuration
+  FORGEJO__SERVICE__DISABLE_REGISTRATION: "{{ .Values.forgejo.service.disableRegistration }}"
+  FORGEJO__SERVICE__REQUIRE_SIGNIN_VIEW: "{{ .Values.forgejo.service.requireSigninView }}"
+  FORGEJO__SERVICE__REGISTER_EMAIL_CONFIRM: "{{ .Values.forgejo.service.registerEmailConfirm }}"
+  FORGEJO__SERVICE__ENABLE_NOTIFY_MAIL: "{{ .Values.forgejo.service.enableNotifyMail }}"
+  FORGEJO__SERVICE__ALLOW_ONLY_EXTERNAL_REGISTRATION: "{{ .Values.forgejo.service.allowOnlyExternalRegistration }}"
+  FORGEJO__SERVICE__ENABLE_CAPTCHA: "{{ .Values.forgejo.service.enableCaptcha }}"
+  FORGEJO__SERVICE__DEFAULT_KEEP_EMAIL_PRIVATE: "{{ .Values.forgejo.service.defaultKeepEmailPrivate }}"
+  FORGEJO__SERVICE__DEFAULT_ALLOW_CREATE_ORGANIZATION: "{{ .Values.forgejo.service.defaultAllowCreateOrganization }}"
+  FORGEJO__SERVICE__DEFAULT_ENABLE_TIMETRACKING: "{{ .Values.forgejo.service.defaultEnableTimetracking }}"
+  FORGEJO__SERVICE__NO_REPLY_ADDRESS: "{{ .Values.forgejo.service.noReplyAddress }}"
+  # session configuration
+  FORGEJO__SESSION__PROVIDER: "{{ .Values.forgejo.session.provider }}"
+  FORGEJO__SESSION__PROVIDER_CONFIG: "{{ .Values.forgejo.session.providerConfig }}"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: runner-scripts
+data:
+  init.sh: |
+    #!/bin/bash
+    echo "Runner initialization script"
+    cd /tmp
+    sleep 6
+    (sleep 1; rm -f /tmp/runner-config.yaml /tmp/.runner) &
+    forgejo-runner daemon --config /tmp/runner-config.yaml

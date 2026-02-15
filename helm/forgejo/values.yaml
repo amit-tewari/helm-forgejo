@@ -1,0 +1,120 @@
+# Default values for Forgejo Helm chart.
+#replicaCount: 1  # will always be 1, as Forgejo does not support clustering
+
+image:
+  repository: codeberg.org/forgejo/forgejo
+  tag: "14-rootless"
+  pullPolicy: IfNotPresent
+
+runnerImage:
+  repository: golang
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  httpPort: 3000
+  httpNodePort: 30011
+  sshPort: 2222
+  sshNodePort: 30012
+
+persistence:
+  enabled: true
+  storageClass: default
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+
+resources: {}
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+forgejo:
+  appName: Forgejo
+  runUser: git
+  runMode: prod
+  appSlogan: "Beyond coding. We Forge."
+  workPath: /data
+  attachment:
+    path: /data/data/attachments
+  cron:
+    UpdateChecker: false
+  database:
+    type: sqlite3
+    host: localhost:3306
+    logSql: false
+    name: gitea
+    passwd: ""
+    path: /data/forgejo.db
+    schema: ""
+    sslMode: disable
+    user: root
+  lfs:
+    path: /data/data/lfs
+  log:
+    mode: file
+    level: Info
+    rootPath: /data/data/log
+  mailer:
+    enabled: false
+    host: localhost:25
+    user: ""
+    password: ""
+  oauth:
+    jwtSecret: ""
+  openid:
+    enablleOpenIDSignIn: false
+    enableOpenIDSignUp: false
+  picture:
+    avatarUploadPath: /data/data/avatars
+    repositoryAvatarUploadPath: /data/data/repo-avatars
+  repository:
+    root: /data/git/repositories
+    local: 
+      localCopyPath: /tmp/local-repo
+    pullRequest:
+      defaultMergeStyle: merge
+    signing:
+      defaultTrustModel: committer
+    upload:
+      tempPath: /tmp/uploads
+  security:
+    installLock: true
+    secretKey: ""
+    reverseProxyLimit: 1
+    reverseProxyTrustedProxies: '*'
+    internalToken: ""
+    passwordHashAlgorithm: pbkdf2_hi
+    disableGitHooks: true
+  server:
+    APP_DATA_PATH: /data
+    SSH_DOMAIN: 192.168.10.111
+    HTTP_PORT: 3000
+    ROOT_URL: http://192.168.10.111:30011/
+    DISABLE_SSH: false
+    START_SSH_SERVER: true
+    SSH_PORT: 22
+    SSH_LISTEN_PORT: 22
+    BUILTIN_SSH_SERVER_USER: git
+    LFS_JWT_SECRET: ""
+    LFS_START_SERVER: true
+    OFFLINE_MODE: true
+  service:
+    disableRegistration: false
+    requireSigninView: false
+    registerEmailConfirm: false
+    enableNotifyMail: false
+    allowOnlyExternalRegistration: false
+    enableCaptcha: false
+    defaultKeepEmailPrivate: false
+    defaultAllowCreateOrganization: true
+    defaultEnableTimetracking: true
+    noReplyAddress: noreply.localhost
+  session:
+    provider: file
+    providerConfig: /data/data/sessions
+
+
